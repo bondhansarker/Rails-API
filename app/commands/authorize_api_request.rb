@@ -16,9 +16,14 @@ class AuthorizeApiRequest
   attr_reader :headers
 
   def user
-    @user ||= User.find(decoded_auth_token[:user_id]) if decoded_auth_token
-  rescue
-    @user || errors.add(:token, 'Invalid token') && nil
+    if signature_checked && decoded_auth_token
+      @user ||= User.find_by(token: http_auth_header)
+    end
+  rescue => e
+  end
+
+  def signature_checked
+    decoded_auth_token[:api_key] == ENV["API_KEY"]
   end
 
   def decoded_auth_token
