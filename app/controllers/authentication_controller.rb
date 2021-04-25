@@ -3,9 +3,8 @@ class AuthenticationController < ApplicationController
 
   def authenticate
     command = AuthenticateUser.call(params[:email], params[:password])
-
     if command.success?
-      render json: { auth_token: command.result }
+      render json: { name: command.result.name ,auth_token: command.result.token}
     else
       render json: { error: command.errors }, status: :unauthorized
     end
@@ -13,7 +12,6 @@ class AuthenticationController < ApplicationController
 
   def sign_out
     command = current_user.update_attribute(:token, "")
-
     if command
       render json: { sign_out: command }
     else

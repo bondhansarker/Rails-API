@@ -12,9 +12,9 @@ class AuthenticateUser
   def call
     user = User.find_by(email: email)
     if user && user.authenticate(password)
-      token = JsonWebToken.encode({user_id: user.id, api_key: ENV["API_KEY"]})
-      user.update_columns(token: token)
-      token
+      auth_token = JsonWebToken.encode({user_id: user.id, api_key: ENV["API_KEY"]})
+      user.update_columns(token: auth_token)
+      user
     else
       errors.add :user_authentication, 'invalid credentials'
       nil
