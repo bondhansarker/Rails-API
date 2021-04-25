@@ -7,3 +7,7 @@ default: &default
 development:
   <<: *default
   database: blog_post_development
+
+production:
+  <<: *default
+  database: myapp_production
